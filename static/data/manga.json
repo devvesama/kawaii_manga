@@ -1,0 +1,70 @@
+[
+    {
+        "title": "Ruhlar olami",
+        "author": "Hayao Miyazaki",
+        "year": 2001,
+        "type": "manga",
+        "genre": "fantaziya",
+        "img": "static/spirited_away.jpg",
+        "ratio": "ratio-2"
+    },
+    {
+        "title": "Arra odam",
+        "author": "Tatsuki Fujimoto",
+        "year": 2018,
+        "type": "manga",
+        "genre": "shonen",
+        "img": "static/chainsaw.jpg",
+        "ratio": "ratio-1"
+    },
+    {
+        "title": "Yolg'iz o'yinchi",
+        "author": "Chugong",
+        "year": 2018,
+        "type": "manhwa",
+        "genre": "jangari",
+        "img": "static/solo_leveling.jpg",
+        "ratio": "ratio-2"
+    },
+    {
+        "title": "Seuwiteu Hom",
+        "author": "Kim Carnby",
+        "year": 2017,
+        "type": "manhwa",
+        "genre": "dahshat",
+        "img": "static/sweet_home.jpg",
+        "ratio": "ratio-3"
+    },
+
+    
+    {
+        "title": "Iblis akademiyasi",
+        "type": "novel",
+        "author": "Shu",
+        "year": 2017,
+        "genre": "fantaziya",
+        "img":"static/novel_cover.webp",
+        "ratio": "ratio-1"
+    },
+
+    {
+        "title": "Iblis akademiyasi",
+        "type": "novel",
+        "author": "Shu",
+        "year": 2017,
+        "genre": "fantaziya",
+        "img": "static/novel_cover.webp",
+        "ratio": "ratio-1"
+    },
+
+    {
+        "title": "Iblis akademiyasi",
+        "type": "novel",
+        "author": "Shu",
+        "year": 2017,
+        "genre": "fantaziya",
+        "img": "static/novel_cover.webp",
+        "ratio": "ratio-1"
+    }
+
+]

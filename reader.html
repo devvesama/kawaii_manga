@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KawaiiUZ Reader | Ruhlar olami</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap');
+        
+        body {
+            background-color: #0b090f;
+            color: #e5e5e5;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .grid-border { border-color: rgba(255, 255, 255, 0.05); }
+
+        /* Анимация панели глав */
+        #chapterSelector {
+            transform: translateY(-110%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #chapterSelector.active { transform: translateY(0); }
+
+        /* Кастомный скролл */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #8a60c2; border-radius: 10px; }
+
+        .img-slide, .comment-slide {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .img-slide.active, .comment-slide.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-zone { position: absolute; top: 0; height: 100%; width: 25%; z-index: 20; cursor: pointer; }
+        .nav-zone-left { left: 0; }
+        .nav-zone-right { right: 0; }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen relative">
+
+    <div id="chapterSelector" class="fixed top-0 left-0 w-full h-[80vh] md:h-[60vh] bg-[#0d0c10] z-[100] border-b-2 border-[#8a60c2] shadow-[0_20px_50px_rgba(0,0,0,0.9)] flex flex-col">
+        <div class="max-w-7xl mx-auto w-full flex flex-col h-full px-5 py-6">
+            
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-sm font-black uppercase tracking-widest text-[#8a60c2]">Mundarija</h2>
+                <button onclick="toggleChapterPanel()" class="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-white transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div class="relative mb-6">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 text-xs"></i>
+                <input type="text" id="chapterSearch" onkeyup="filterChapters()" placeholder="Bob yoki tom raqami..." class="w-full pl-10 pr-4 py-3 bg-[#16151a] border border-white/5 focus:border-[#8a60c2] focus:bg-[#1a1525] rounded text-xs text-white uppercase tracking-widest font-bold outline-none transition-all">
+            </div>
+
+            <div class="chapter-list custom-scroll flex-1 overflow-y-auto pr-2 space-y-6">
+                <div>
+                    <span class="text-[10px] font-black text-gray-600 uppercase tracking-[0.3em] mb-3 block">Tom 01</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <a href="#" class="flex items-center justify-between p-4 bg-[#16151a] border grid-border rounded hover:border-[#8a60c2] transition group">
+                            <span class="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-white transition">111-bob: Hal qiluvchi jang</span>
+                            <i class="fas fa-chevron-right text-[10px] text-gray-700"></i>
+                        </a>
+                        <a href="#" class="flex items-center justify-between p-4 bg-[#8a60c2]/10 border border-[#8a60c2]/30 rounded">
+                            <span class="text-xs font-bold uppercase tracking-widest text-[#8a60c2]">110-bob: Yolg'iz o'yinchi</span>
+                            <i class="fas fa-play text-[10px] text-[#8a60c2]"></i>
+                        </a>
+                        <a href="#" class="flex items-center justify-between p-4 bg-[#16151a] border grid-border rounded hover:border-[#8a60c2] transition group">
+                            <span class="text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-white transition">109-bob: Qorong'u yo'l</span>
+                            <i class="fas fa-chevron-right text-[10px] text-gray-700"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header class="border-b border-gray-800 bg-[#19161e]/80 backdrop-blur-md sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto flex items-center justify-between px-5 h-[64px] relative">
+            
+            <div class="flex-shrink-0 z-10">
+                <a href="manga_profile.html" class="flex items-center gap-3 text-gray-400 hover:text-white transition group">
+                    <i class="fas fa-chevron-left group-hover:-translate-x-1 transition-transform"></i>
+                    <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest hidden md:block">Asarga qaytish</span>
+                </a>
+            </div>
+            
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center cursor-pointer group px-2 py-1 rounded hover:bg-white/5 transition z-0 w-max" onclick="toggleChapterPanel()">
+                <div class="flex items-center justify-center gap-2">
+                    <h1 class="text-[11px] md:text-sm font-black uppercase tracking-tighter whitespace-nowrap">Ruhlar olami</h1>
+                    <i class="fas fa-chevron-down text-[8px] text-[#8a60c2] group-hover:translate-y-0.5 transition-transform"></i>
+                </div>
+                <p class="text-[9px] md:text-[10px] text-[#8a60c2] font-bold tracking-widest mt-0.5 whitespace-nowrap">
+                    110-BOB <span class="text-gray-600 mx-1">/</span> <span id="header-page-num">SAHIFA 1</span>
+                </p>
+            </div>
+
+            <div class="flex items-center gap-4 flex-shrink-0 z-10">
+                <i class="fas fa-bookmark text-gray-600 hover:text-[#8a60c2] cursor-pointer transition text-sm"></i>
+                <i class="fas fa-cog text-gray-600 hover:text-white cursor-pointer transition text-sm"></i>
+            </div>
+
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full md:px-5 flex flex-col relative z-10 flex-1 py-4 md:py-8">
+        
+        <div class="flex flex-col shadow-2xl bg-[#0d0c10] md:border grid-border rounded-sm overflow-hidden">
+            
+            <div class="relative w-full min-h-[60vh] flex items-center justify-center bg-black">
+                <div class="nav-zone nav-zone-left" onclick="changePage(-1)"></div>
+                <div class="nav-zone nav-zone-right" onclick="changePage(1)"></div>
+
+                <div class="img-slide active w-full" data-page="1">
+                    <img src="/static/1.jpeg" class="w-full h-auto block" alt="Page 1">
+                </div>
+                <div class="img-slide w-full" data-page="2">
+                    <img src="/static/2.jpeg" class="w-full h-auto block" alt="Page 2">
+                </div>
+            </div>
+
+            <div class="p-4 md:p-6 bg-[#0b090f] border-y grid-border flex flex-col md:flex-row items-center justify-between gap-4 z-40">
+                <div class="flex items-center gap-2 w-full md:w-auto justify-between md:justify-start">
+                    <button id="btn-prev" onclick="changePage(-1)" class="w-12 h-12 bg-[#16151a] border grid-border rounded flex items-center justify-center hover:bg-[#8a60c2] hover:text-[#0d0c10] transition">
+                        <i class="fas fa-arrow-left text-sm"></i>
+                    </button>
+                    <div class="h-12 px-6 bg-[#16151a] border grid-border rounded flex items-center gap-4 flex-1 md:flex-none justify-center">
+                        <span id="current-index" class="text-xs font-black text-white">1</span>
+                        <div class="w-px h-4 bg-white/10"></div>
+                        <span id="total-index" class="text-xs font-black text-gray-600">2</span>
+                    </div>
+                    <button id="btn-next" onclick="changePage(1)" class="w-12 h-12 bg-[#16151a] border grid-border rounded flex items-center justify-center hover:bg-[#8a60c2] hover:text-[#0d0c10] transition">
+                        <i class="fas fa-arrow-right text-sm"></i>
+                    </button>
+                </div>
+
+                <button class="w-full md:w-auto px-10 h-12 bg-[#8a60c2]/10 border border-[#8a60c2]/30 text-[#ffffff] text-[10px] font-black uppercase tracking-[0.2em] rounded hover:bg-[#8a60c2] hover:text-[#0d0c10] transition">
+                    Keyingi Bob
+                </button>
+            </div>
+
+            <div class="bg-[#0d0c10]">
+                <div class="comment-slide active p-6 md:p-10" data-page="1">
+                    <div class="flex items-center justify-between mb-8">
+                        <h3 class="text-sm font-black uppercase tracking-widest text-white">Sahifa muhokamasi</h3>
+                        <span class="text-[10px] font-bold text-[#8a60c2] uppercase tracking-widest bg-[#8a60c2]/10 px-3 py-1 rounded">1 izoh</span>
+                    </div>
+                    <div class="flex gap-4 mb-8">
+                        <div class="w-8 h-8 rounded-full bg-[#8a60c2]/20 border border-[#8a60c2]/30 shrink-0"></div>
+                        <div>
+                            <h4 class="text-[11px] font-bold text-[#8a60c2] uppercase tracking-wider">devvesama</h4>
+                            <p class="text-xs text-gray-400 mt-1">Bu bo'lim juda qiziqarli boshlandi!</p>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-8 border-t grid-border">
+                        <textarea class="w-full p-4 bg-[#121015] border border-white/10 focus:border-[#8a60c2] focus:bg-[#1a1525] rounded-md text-xs text-white placeholder-gray-600 outline-none transition-all h-24 resize-none custom-scroll" placeholder="Fikringizni qoldiring..."></textarea>
+                        <button class="mt-4 px-6 py-2.5 bg-[#8a60c2] text-[#0d0c10] text-[10px] font-black uppercase tracking-widest rounded hover:bg-[#9a70d2] transition shadow-lg shadow-[#8a60c2]/20">Yuborish</button>
+                    </div>
+                </div>
+
+                <div class="comment-slide p-6 md:p-10" data-page="2">
+                    <div class="flex items-center justify-between mb-8">
+                        <h3 class="text-sm font-black uppercase tracking-widest text-white">Sahifa muhokamasi</h3>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest bg-[#16151a] px-3 py-1 rounded">0 izoh</span>
+                    </div>
+                    <div class="mt-8 pt-8 border-t grid-border">
+                        <textarea class="w-full p-4 bg-[#121015] border border-white/10 focus:border-[#8a60c2] focus:bg-[#1a1525] rounded-md text-xs text-white placeholder-gray-600 outline-none transition-all h-24 resize-none custom-scroll" placeholder="Fikringizni qoldiring..."></textarea>
+                        <button class="mt-4 px-6 py-2.5 bg-[#8a60c2] text-[#0d0c10] text-[10px] font-black uppercase tracking-widest rounded hover:bg-[#9a70d2] transition">Yuborish</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Переключение панели глав
+        function toggleChapterPanel() {
+            document.getElementById('chapterSelector').classList.toggle('active');
+        }
+
+        // Фильтр глав
+        function filterChapters() {
+            let input = document.getElementById('chapterSearch');
+            let filter = input.value.toLowerCase();
+            let items = document.querySelectorAll('.chapter-list a');
+            
+            items.forEach(item => {
+                let text = item.textContent.toLowerCase();
+                item.style.display = text.includes(filter) ? "flex" : "none";
+            });
+        }
+
+        // Навигация по страницам
+        let currentPage = 1;
+        const totalPages = document.querySelectorAll('.img-slide').length;
+        document.getElementById('total-index').textContent = totalPages;
+
+        function updateUI() {
+            document.getElementById('header-page-num').textContent = `SAHIFA ${currentPage}`;
+            document.getElementById('current-index').textContent = currentPage;
+            
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            
+            // Если первая страница — выключаем левую стрелку
+            if (currentPage === 1) {
+                btnPrev.classList.add('opacity-30', 'pointer-events-none');
+            } else {
+                btnPrev.classList.remove('opacity-30', 'pointer-events-none');
+            }
+
+            // Если последняя страница — выключаем правую стрелку
+            if (currentPage === totalPages) {
+                btnNext.classList.add('opacity-30', 'pointer-events-none');
+            } else {
+                btnNext.classList.remove('opacity-30', 'pointer-events-none');
+            }
+        }
+
+        function changePage(delta) {
+            const next = currentPage + delta;
+            if (next >= 1 && next <= totalPages) {
+                document.querySelector(`.img-slide[data-page="${currentPage}"]`).classList.remove('active');
+                document.querySelector(`.comment-slide[data-page="${currentPage}"]`).classList.remove('active');
+                
+                currentPage = next;
+                
+                document.querySelector(`.img-slide[data-page="${currentPage}"]`).classList.add('active');
+                document.querySelector(`.comment-slide[data-page="${currentPage}"]`).classList.add('active');
+                
+                updateUI();
+                
+                // Прокрутка к началу картинки
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Управление с клавиатуры
+        document.addEventListener('keydown', (e) => {
+            // ИГНОРИРУЕМ нажатия стрелок, если активен инпут или текстареа (чтобы не перелистывать при наборе текста)
+            if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+            if (e.key === 'ArrowRight') changePage(1);
+            if (e.key === 'ArrowLeft') changePage(-1);
+        });
+
+        // Инициализация при загрузке страницы
+        updateUI();
+    </script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+/* =======================================================
+   static/css/style.css
+   ======================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&family=Inter:wght@400;700;900&display=swap');
+
+/* --- БАЗОВЫЕ НАСТРОЙКИ --- */
+html, body {
+    max-width: 100vw;
+    width: 100%;
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
+}
+
+body { 
+    color: #fff;
+    position: relative;
+    padding-bottom: calc(70px + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+    body { padding-bottom: 0; }
+}
+
+/* Специфичные стили для страниц (добавь класс к <body>) */
+body.catalog-page {
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    background-color: #0d0c10;
+}
+
+body.profile-page {
+    font-family: 'Inter', sans-serif; 
+    background-color: #19161e;
+}
+
+.quote-text {
+    font-family: 'Georgia', serif;
+}
+
+/* --- ФОНОВЫЕ ЭФФЕКТЫ (КАТАЛОГ) --- */
+.orb-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    transition: transform 0.2s ease-out;
+}
+.orb-1 {
+    top: -10%; left: -10%;
+    width: 50vw; height: 50vw;
+    background: radial-gradient(circle, rgba(138, 96, 194, 0.15) 0%, transparent 70%);
+}
+.orb-2 {
+    bottom: -10%; right: -5%;
+    width: 40vw; height: 40vw;
+    background: radial-gradient(circle, rgba(138, 96, 194, 0.1) 0%, transparent 70%);
+}
+.noise {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    opacity: 0.03;
+    pointer-events: none;
+    background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+}
+.bg-text {
+    position: fixed;
+    font-size: 20vw;
+    font-weight: 900;
+    color: rgba(255,255,255,0.01);
+    z-index: -2;
+    top: 25%; left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+}
+
+/* --- СЕТКА МАНГИ И КАРТОЧКИ --- */
+.manga-masonry {
+    column-count: 2;
+    column-gap: 15px;
+    width: 100%;
+    transition: all 0.5s ease;
+}
+@media (min-width: 768px) { .manga-masonry { column-count: 3; column-gap: 20px; } }
+@media (min-width: 1024px) { .manga-masonry { column-count: 4; column-gap: 25px; } }
+
+.manga-item {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    display: block; 
+    animation: fadeIn 0.5s ease backwards;
+    cursor: pointer;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.manga-card {
+    position: relative;
+    background: #16151a;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.manga-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, #8a60c2, transparent, #8a60c2) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+.manga-card:hover::after { opacity: 1; }
+
+.ratio-1 { aspect-ratio: 2/3.2; }
+.ratio-2 { aspect-ratio: 2/2.5; }
+.ratio-3 { aspect-ratio: 2/2.8; }
+
+.manga-card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.details-overlay {
+    background: linear-gradient(to top, #0d0c10 25%, transparent);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 18px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s ease;
+}
+
+/* Десктопные ховеры карточек */
+@media (min-width: 769px) {
+    .manga-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+    .manga-card:hover img { filter: grayscale(0%); transform: scale(1.08); }
+    .manga-card:hover .details-overlay { opacity: 1; transform: translateY(0); }
+}
+
+/* --- МОБИЛЬНЫЕ АНИМАЦИИ КАРТОЧЕК --- */
+@media (max-width: 768px) {
+    .manga-card img { filter: grayscale(40%); }
+    .details-overlay {
+        opacity: 0.85; 
+        transform: translateY(0);
+        background: linear-gradient(to top, rgba(13,12,16, 0.95) 15%, transparent);
+    }
+    .manga-card.scroll-focus img {
+        filter: grayscale(0%) !important;
+        transform: scale(1.05) !important;
+    }
+    .manga-card.scroll-focus .details-overlay {
+        opacity: 1 !important;
+        background: linear-gradient(to top, rgba(13,12,16, 1) 25%, transparent) !important;
+    }
+    .manga-card.scroll-focus::after { opacity: 1 !important; }
+    .manga-card:active {
+        transform: scale(0.96) translateY(2px) !important;
+        transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: none;
+    }
+}
+
+/* --- ЭЛЕМЕНТЫ ИНТЕРФЕЙСА --- */
+.hero-image {
+    width: 400px; height: auto;
+    object-fit: contain;
+}
+
+.filter-chip {
+    padding: 8px 18px;
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: rgba(255,255,255,0.02);
+}
+.filter-chip.active {
+    background: #8a60c2; border-color: #8a60c2;
+    color: white; box-shadow: 0 5px 15px rgba(138, 96, 194, 0.3);
+}
+
+/* Убираем скроллбар для горизонтальных меню */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* --- ПОИСК (ОВЕРЛЕЙ) --- */
+#searchOverlay {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: none; 
+}
+#searchOverlay.active { display: flex; }
+.search-panel {
+    background: #1a191f;
+    width: 100%; max-width: 650px;
+    border-radius: 4px; overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    animation: panelIn 0.2s ease-out forwards;
+    display: flex; flex-direction: column;
+}
+@keyframes panelIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+.search-input-box {
+    background: #25242b;
+    padding: 12px 20px;
+    display: flex; align-items: center;
+}
+.search-input-box input {
+    background: transparent; border: none; outline: none;
+    width: 100%; color: white; font-size: 14px; font-weight: 500;
+}
+.search-input-box input::placeholder { color: #555; }
+.search-tabs {
+    padding: 10px 20px; display: flex; gap: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+.search-tab-item {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: #777; cursor: pointer; transition: color 0.2s;
+}
+.search-tab-item:hover, .search-tab-item.active { color: #ffffff; }
+#searchResults {
+    max-height: 350px; overflow-y: auto; background: #1a191f;
+}
+#searchResults::-webkit-scrollbar { width: 6px; }
+#searchResults::-webkit-scrollbar-thumb { background: #8a60c2; border-radius: 4px; }
+.search-result-item {
+    display: flex; align-items: center; gap: 15px; padding: 12px 20px;
+    cursor: pointer; border-bottom: 1px solid rgba(255, 255, 255, 0.02); transition: background 0.2s;
+}
+.search-result-item:hover { background: rgba(255, 255, 255, 0.04); }
+.search-result-img {
+    width: 45px; height: 60px; object-fit: cover;
+    border-radius: 4px; background: #25242b;
+}
+
+/* --- БОКОВОЕ МЕНЮ ФИЛЬТРОВ (DRAWER) --- */
+.drawer-scrollbar::-webkit-scrollbar { width: 4px; }
+.drawer-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 4px; }
+.drawer-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+.drawer-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(138, 96, 194, 0.5); }
+
+.filter-input {
+    width: 100%; background: #1a191f; border: 1px solid rgba(255,255,255,0.08);
+    color: #ffffff; padding: 8px 10px; border-radius: 4px; font-size: 11px;
+    outline: none !important; box-shadow: none !important; transition: all 0.3s ease;
+}
+.filter-input::placeholder { color: #555; }
+.filter-input:focus { border-color: #8a60c2; box-shadow: 0 0 0 1px #8a60c2 !important; }
+.filter-input::-webkit-outer-spin-button, .filter-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.filter-input[type=number] { -moz-appearance: textfield; }
+
+.custom-checkbox-label {
+    display: flex; align-items: center; gap: 8px; font-size: 12px; color: #a0a0a0;
+    cursor: pointer; user-select: none; transition: color 0.2s;
+}
+.custom-checkbox-label:hover { color: #ffffff; }
+.custom-checkbox-label input { display: none; }
+.checkmark {
+    width: 16px; height: 16px; background: #1a191f; border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 3px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; flex-shrink: 0;
+}
+.custom-checkbox-label input:checked ~ .checkmark { background: #8a60c2; border-color: #8a60c2; }
+.custom-checkbox-label input:checked ~ .checkmark::after {
+    content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+    font-size: 9px; color: white;
+}
+
+/* --- ЖЕСТКАЯ ФИКСАЦИЯ НИЖНЕЙ ПАНЕЛИ --- */
+.mobile-nav-fixed {
+    position: fixed; bottom: 0; left: 0; width: 100%;
+    background-color: #16151a; border-top: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 90; display: flex; justify-content: space-between; align-items: center;
+    padding-left: 1rem; padding-right: 1rem; padding-top: 0.5rem;
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+}
+@media (min-width: 768px) { .mobile-nav-fixed { display: none; } }

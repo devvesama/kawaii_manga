@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KawaiiUZ - Bosh sahifa</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="static/css/style.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap');
+        
+        body {
+            background-color: #0b090f;
+            color: #e5e5e5;
+            font-family: 'Space Grotesk', sans-serif; 
+        }
+
+        .grid-border { border-color: rgba(255, 255, 255, 0.05); }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0b090f; }
+        ::-webkit-scrollbar-thumb { background: #8a60c2; border-radius: 10px; }
+
+        .mobile-nav-fixed {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(22, 21, 26, 0.95); backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-around; 
+            padding-top: 10px;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            z-index: 50;
+        }
+        @media (min-width: 768px) { .mobile-nav-fixed { display: none; } }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#8a60c2] selection:text-white relative z-0 overflow-x-hidden flex flex-col min-h-screen">
+
+    <div class="fixed top-[20%] -left-[250px] w-[600px] h-[600px] bg-[#8a60c2] opacity-[0.12] blur-[150px] pointer-events-none -z-10 rounded-full"></div>
+    <div class="fixed bottom-[10%] -right-[250px] w-[600px] h-[600px] bg-[#8a60c2] opacity-[0.12] blur-[150px] pointer-events-none -z-10 rounded-full"></div>
+
+    <div id="searchOverlay" class="fixed inset-0 z-[100] hidden items-start justify-center pt-6 md:pt-24 bg-[#0d0c10]/95 backdrop-blur-md">
+        <div class="search-panel w-full max-w-4xl px-6" id="searchPanel">
+            <div class="search-input-box relative flex items-center border-b-2 border-gray-800 focus-within:border-[#8a60c2] transition pb-2">
+                <i class="fas fa-search text-gray-500 mr-4 text-xl"></i>
+                <input type="text" id="searchInput" placeholder="Qidiruv..." autocomplete="off" class="w-full bg-transparent text-white text-2xl md:text-4xl font-black uppercase tracking-widest focus:outline-none focus:ring-0 placeholder:text-gray-700">
+                <i class="fas fa-times absolute right-0 text-gray-500 text-2xl cursor-pointer hover:text-white transition" id="clearSearchBtn" onclick="document.getElementById('searchOverlay').classList.add('hidden')"></i>
+            </div>
+            <div class="search-tabs flex gap-6 mt-6 overflow-x-auto whitespace-nowrap text-[10px] md:text-xs uppercase font-bold tracking-widest text-gray-500">
+                <div class="cursor-pointer text-[#8a60c2] border-b border-[#8a60c2] pb-1">Asarlar</div>
+                <div class="cursor-pointer hover:text-white transition pb-1">Jamoalar</div>
+                <div class="cursor-pointer hover:text-white transition pb-1">Qahramonlar</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="fixed inset-0 bg-[#0d0c10]/95 backdrop-blur-xl z-[100] translate-x-full transition-transform duration-300 ease-in-out pt-24 px-6 flex flex-col gap-6 md:hidden">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black uppercase tracking-widest text-[#8a60c2]">Menyu</h2>
+            <button id="closeMobileMenuBtn" class="text-gray-400 hover:text-white transition">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <a href="#" class="text-2xl font-black uppercase tracking-widest text-[#8a60c2] transition">Asosiy</a>
+        <a href="manga_catalog.html" class="text-2xl font-black uppercase tracking-widest text-white hover:text-[#8a60c2] transition">Katalog</a>
+        <a href="#" class="text-2xl font-black uppercase tracking-widest text-white hover:text-[#8a60c2] transition">Forum</a>
+        <a href="#" class="text-2xl font-black uppercase tracking-widest text-white hover:text-[#8a60c2] transition">Radio</a>
+        <a href="#" class="text-2xl font-black uppercase tracking-widest text-white hover:text-[#8a60c2] transition">Profil</a>
+    </div>
+
+    <header class="hidden md:block border-b border-gray-800 bg-[#19161e]/80 backdrop-blur-md sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto flex items-center justify-between px-5 h-[72px]">
+            <div class="text-2xl font-black tracking-tight italic cursor-pointer">
+                Kawaii<span class="text-[#8a60c2]">UZ</span>
+            </div>
+            <div class="flex items-center gap-6 text-xs uppercase font-bold tracking-[0.15em] text-gray-400">
+                <button onclick="document.getElementById('searchOverlay').classList.remove('hidden'); document.getElementById('searchInput').focus();" class="nav-link hover:text-white transition flex items-center gap-2 group p-2">
+                    <i class="fas fa-search text-lg group-hover:text-[#ffffff]"></i>
+                </button>
+                <a href="manga_catalog.html" class="nav-link hover:text-white transition flex items-center gap-2 group p-2">
+                    <i class="fas fa-book-open text-lg group-hover:text-[#ffffff]"></i>
+                    <span>Katalog</span>
+                </a>
+                <a href="#" class="nav-link hover:text-white transition flex items-center gap-2 group p-2">
+                    <i class="fas fa-comments text-lg group-hover:text-[#ffffff]"></i>
+                    <span>Forum</span>
+                </a>
+                <a href="#" class="nav-link hover:text-white transition flex items-center gap-2 group p-2">
+                    <i class="fas fa-headphones text-lg group-hover:text-[#ffffff]"></i>
+                    <span>Radio</span>
+                </a>
+                <button class="nav-link hover:text-white transition group p-2" title="Yangiliklar va FAQ">
+                    <i class="fas fa-ellipsis-h text-xl group-hover:text-[#ffffff]"></i>
+                </button>
+            </div>
+            <div class="flex items-center gap-4 text-gray-400">
+                <i class="fas fa-user text-xl hover:text-white cursor-pointer transition p-2"></i>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full md:px-5 flex flex-col relative z-10 flex-1">
+        
+        <div class="md:border-x border-b grid-border bg-[#0b090f]/40 backdrop-blur-sm flex flex-col shadow-2xl">
+            
+            <section class="flex flex-col md:flex-row min-h-[60vh] md:min-h-[70vh] border-b grid-border relative overflow-hidden">
+                
+                <div class="absolute top-1/2 left-0 -translate-y-1/2 text-[100px] md:text-[150px] lg:text-[180px] font-black uppercase text-transparent tracking-tighter select-none pointer-events-none z-0 opacity-[0.15]" style="-webkit-text-stroke: 1px rgba(138, 96, 194, 0.4);">
+                    KAWAII UZ
+                </div>
+                
+                <div class="w-full md:w-1/2 px-6 pt-[200px] pb-12 md:px-12 md:pt-12 lg:px-16 lg:pt-16 flex flex-col justify-center relative z-20 border-b md:border-b-0 md:border-r grid-border bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')]">
+                    
+                    <div class="absolute top-6 left-6 md:left-12 lg:left-16 items-center gap-3 hidden md:flex">
+                        <span class="text-[10px] font-mono text-gray-600 tracking-widest">VOL. 01 / START</span>
+                        <span class="w-1 h-1 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse"></span>
+                        <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Tizim onlayn</span>
+                    </div>
+                    
+                    <div>
+                        <h1 class="text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-black uppercase tracking-tighter leading-[0.9] text-white">
+                            Olamingizni <br>
+                            <span class="text-[#8a60c2]">Kashf</span> Eting.
+                        </h1>
+                        <p class="mt-6 text-sm text-gray-400 max-w-sm leading-relaxed drop-shadow-md">
+                            Manga, manhwa va renobelarning o'zbek tilidagi eng yirik va estetik arxivi. Biz san'atni qadrlaymiz.
+                        </p>
+                    </div>
+
+                    <div class="mt-6 flex flex-wrap gap-2">
+                        <span class="text-[10px] md:text-xs uppercase tracking-widest text-gray-400 border border-white/20 px-2 py-1 rounded-sm hover:border-[#8a60c2] hover:text-white cursor-pointer transition bg-[#0b090f]/70 backdrop-blur-sm">Harakat</span>
+                        <span class="text-[10px] md:text-xs uppercase tracking-widest text-gray-400 border border-white/20 px-2 py-1 rounded-sm hover:border-[#8a60c2] hover:text-white cursor-pointer transition bg-[#0b090f]/70 backdrop-blur-sm">Isekai</span>
+                        <span class="text-[10px] md:text-xs uppercase tracking-widest text-gray-400 border border-white/20 px-2 py-1 rounded-sm hover:border-[#8a60c2] hover:text-white cursor-pointer transition bg-[#0b090f]/70 backdrop-blur-sm">Romantika</span>
+                    </div>
+                    
+                    <div class="mt-10 flex flex-col xl:flex-row xl:items-center gap-8">
+                        <a href="manga_catalog.html" class="inline-flex items-center justify-center gap-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-white group w-full md:w-max bg-[#8a60c2]/20 md:bg-transparent px-4 py-4 md:p-0 rounded-md md:rounded-none backdrop-blur-sm md:backdrop-blur-none border border-[#8a60c2]/50 md:border-none">
+                            <span class="w-4 md:w-8 h-[1px] bg-white group-hover:w-16 group-hover:bg-[#8a60c2] transition-all duration-300 hidden md:block"></span>
+                            Katalogga kirish
+                        </a>
+
+                        <div class="hidden xl:block h-8 w-px bg-white/10"></div>
+
+                        <div class="flex gap-6">
+                            <div>
+                                <div class="text-xl font-black text-white drop-shadow-md">1.2K+</div>
+                                <div class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mt-1">Asarlar</div>
+                            </div>
+                            <div>
+                                <div class="text-xl font-black text-white drop-shadow-md">850</div>
+                                <div class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mt-1">Faol o'quvchi</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute inset-0 md:relative w-full md:w-1/2 flex items-end justify-center z-0 md:z-10 group overflow-hidden opacity-20 md:opacity-100 pointer-events-none md:pointer-events-auto">
+                    <div class="absolute right-4 top-1/4 text-[120px] font-black text-white/5 pointer-events-none transition duration-700 md:group-hover:text-[#8a60c2]/10 select-none hidden md:block" style="writing-mode: vertical-rl;">
+                        漫画
+                    </div>
+                    <img src="/static/landing.png" class="relative z-10 w-full h-[120%] md:h-full object-cover md:object-contain object-bottom md:object-top transition duration-700 drop-shadow-[0_0_15px_rgba(138,96,194,0.15)] translate-y-[100px] md:translate-y-0" alt="Mascot Art">
+                </div>
+            </section>
+
+            <section class="border-b grid-border bg-[#0b090f]/60 backdrop-blur-md p-5 md:p-10 lg:p-12 relative z-20">
+                <div class="flex justify-between items-end mb-6 md:mb-8">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tighter text-white">Davom ettirish</h2>
+                        <p class="text-[10px] md:text-xs uppercase tracking-widest text-[#8a60c2] mt-1 font-bold">O'qiyapsiz</p>
+                    </div>
+                    <div class="hidden md:flex gap-2">
+                        <button class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-[#8a60c2] hover:bg-white/5 transition"><i class="fas fa-chevron-left text-xs"></i></button>
+                        <button class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-[#8a60c2] hover:bg-white/5 transition"><i class="fas fa-chevron-right text-xs"></i></button>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 md:gap-6 overflow-x-auto pb-4 -mx-5 px-5 md:mx-0 md:px-0 snap-x">
+                    
+                    <a href="reader.html" class="snap-start flex-shrink-0 w-[260px] md:w-[300px] bg-[#121015]/80 hover:bg-[#1a191f] border border-white/5 hover:border-[#8a60c2]/50 transition-all duration-300 rounded-lg p-3 flex gap-4 group relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#8a60c2]/0 to-[#8a60c2]/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="w-16 h-24 bg-[#0d0c10] rounded border border-white/5 overflow-hidden shrink-0 relative z-10">
+                            <img src="static/spirited_away.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" onerror="this.src='https://via.placeholder.com/64x96/1a191f/8a60c2?text=Manga'">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <i class="fas fa-play text-white text-[10px] ml-0.5"></i>
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-center flex-1 overflow-hidden relative z-10">
+                            <h3 class="text-sm font-bold text-white uppercase tracking-wider truncate mb-1 group-hover:text-[#8a60c2] transition-colors">Ruhlar olami</h3>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-3 font-medium">32-BOB</p>
+                            
+                            <div class="w-full h-1.5 bg-[#0d0c10] rounded-full overflow-hidden border border-white/5">
+                                <div class="h-full bg-[#8a60c2] shadow-[0_0_10px_#8a60c2]" style="width: 25%"></div>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-[9px] text-gray-500 font-mono">25%</p>
+                                <p class="text-[9px] text-gray-500 font-mono">128 ta bob</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="reader.html" class="snap-start flex-shrink-0 w-[260px] md:w-[300px] bg-[#121015]/80 hover:bg-[#1a191f] border border-white/5 hover:border-[#8a60c2]/50 transition-all duration-300 rounded-lg p-3 flex gap-4 group relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#8a60c2]/0 to-[#8a60c2]/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="w-16 h-24 bg-[#0d0c10] rounded border border-white/5 overflow-hidden shrink-0 relative z-10">
+                            <img src="static/mononoke_hime.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" onerror="this.src='https://via.placeholder.com/64x96/1a191f/8a60c2?text=Manga'">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <i class="fas fa-play text-white text-[10px] ml-0.5"></i>
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-center flex-1 overflow-hidden relative z-10">
+                            <h3 class="text-sm font-bold text-white uppercase tracking-wider truncate mb-1 group-hover:text-[#8a60c2] transition-colors">Mononoke</h3>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-3 font-medium">12-BOB</p>
+                            
+                            <div class="w-full h-1.5 bg-[#0d0c10] rounded-full overflow-hidden border border-white/5">
+                                <div class="h-full bg-[#8a60c2] shadow-[0_0_10px_#8a60c2]" style="width: 80%"></div>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-[9px] text-gray-500 font-mono">80%</p>
+                                <p class="text-[9px] text-gray-500 font-mono">15 ta bob</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="manga_catalog.html" class="snap-start flex-shrink-0 w-[260px] md:w-[300px] bg-transparent border border-dashed border-white/10 hover:border-[#8a60c2]/50 transition-all duration-300 rounded-lg p-3 flex flex-col items-center justify-center gap-2 group cursor-pointer opacity-70 hover:opacity-100 h-auto">
+                        <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-500 group-hover:text-[#8a60c2] group-hover:bg-[#8a60c2]/10 transition">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-white transition mt-1">Yangi asar qo'shish</span>
+                    </a>
+
+                </div>
+            </section>
+
+            <section class="grid grid-cols-1 lg:grid-cols-12">
+                
+                <div class="lg:col-span-8 border-b lg:border-b-0 lg:border-r grid-border p-5 md:p-10 lg:p-12 z-10 bg-[#0b090f]/80 md:bg-transparent">
+                    <div class="flex justify-between items-end mb-8 md:mb-10">
+                        <h2 class="text-2xl md:text-4xl font-black uppercase tracking-tighter text-white">Yangilanishlar</h2>
+                        <a href="#" class="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8a60c2] hover:text-white transition">Barchasi</a>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <a href="#" class="group flex items-center justify-between py-5 border-b grid-border hover:bg-white/5 transition px-2 md:px-4 -mx-2 md:-mx-4 rounded-sm">
+                            <div class="flex items-center gap-3 md:gap-6 w-full">
+                                <span class="font-mono text-xs text-gray-500 w-12 md:w-16 shrink-0">10:45</span>
+                                <h3 class="text-base md:text-xl font-bold uppercase tracking-widest text-gray-300 group-hover:text-white transition truncate">Yolg'iz o'yinchi</h3>
+                                <div class="flex-1 border-b border-dashed border-gray-800 mx-2 md:mx-4 hidden md:block opacity-50 group-hover:opacity-100 group-hover:border-[#8a60c2] transition"></div>
+                                <span class="font-mono text-xs md:text-sm font-bold text-[#8a60c2] shrink-0">110-BOB</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="group flex items-center justify-between py-5 border-b grid-border hover:bg-white/5 transition px-2 md:px-4 -mx-2 md:-mx-4 rounded-sm">
+                            <div class="flex items-center gap-3 md:gap-6 w-full">
+                                <span class="font-mono text-xs text-gray-500 w-12 md:w-16 shrink-0">10:15</span>
+                                <h3 class="text-base md:text-xl font-bold uppercase tracking-widest text-gray-300 group-hover:text-white transition truncate">Ruhlar olami</h3>
+                                <div class="flex-1 border-b border-dashed border-gray-800 mx-2 md:mx-4 hidden md:block opacity-50 group-hover:opacity-100 group-hover:border-[#8a60c2] transition"></div>
+                                <span class="font-mono text-xs md:text-sm font-bold text-[#8a60c2] shrink-0">32-BOB</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="group flex items-center justify-between py-5 border-b grid-border hover:bg-white/5 transition px-2 md:px-4 -mx-2 md:-mx-4 rounded-sm">
+                            <div class="flex items-center gap-3 md:gap-6 w-full">
+                                <span class="font-mono text-xs text-gray-500 w-12 md:w-16 shrink-0">Kecha</span>
+                                <h3 class="text-base md:text-xl font-bold uppercase tracking-widest text-gray-300 group-hover:text-white transition truncate">Iblis akademiyasi</h3>
+                                <div class="flex-1 border-b border-dashed border-gray-800 mx-2 md:mx-4 hidden md:block opacity-50 group-hover:opacity-100 group-hover:border-[#8a60c2] transition"></div>
+                                <span class="font-mono text-xs md:text-sm font-bold text-[#8a60c2] shrink-0">TOM 1. BOB 5</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="group flex items-center justify-between py-5 hover:bg-white/5 transition px-2 md:px-4 -mx-2 md:-mx-4 rounded-sm">
+                            <div class="flex items-center gap-3 md:gap-6 w-full">
+                                <span class="font-mono text-xs text-gray-500 w-12 md:w-16 shrink-0">27.10</span>
+                                <h3 class="text-base md:text-xl font-bold uppercase tracking-widest text-gray-300 group-hover:text-white transition truncate">O'quvchi haqida</h3>
+                                <div class="flex-1 border-b border-dashed border-gray-800 mx-2 md:mx-4 hidden md:block opacity-50 group-hover:opacity-100 group-hover:border-[#8a60c2] transition"></div>
+                                <span class="font-mono text-xs md:text-sm font-bold text-[#8a60c2] shrink-0">88-BOB</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-4 flex flex-col z-10 bg-[#0b090f]/80 md:bg-transparent">
+                    
+                    <div class="p-5 md:p-10 border-b grid-border h-full lg:h-1/2 flex flex-col justify-center">
+                        <h2 class="text-sm md:text-lg font-black uppercase tracking-[0.1em] mb-6 text-gray-500">Hafta Trendlari</h2>
+                        
+                        <div class="flex flex-col gap-5">
+                            <a href="#" class="flex items-baseline gap-4 group">
+                                <span class="text-2xl md:text-3xl font-black text-white/5 group-hover:text-[#8a60c2] transition">01</span>
+                                <div>
+                                    <h4 class="font-bold uppercase tracking-widest text-xs md:text-sm text-gray-300 group-hover:text-white transition">Berserk</h4>
+                                    <p class="font-mono text-[10px] text-gray-500 mt-1">Manga</p>
+                                </div>
+                            </a>
+                            <a href="#" class="flex items-baseline gap-4 group">
+                                <span class="text-2xl md:text-3xl font-black text-white/5 group-hover:text-[#8a60c2] transition">02</span>
+                                <div>
+                                    <h4 class="font-bold uppercase tracking-widest text-xs md:text-sm text-gray-300 group-hover:text-white transition">Yolg'iz o'yinchi</h4>
+                                    <p class="font-mono text-[10px] text-gray-500 mt-1">Manhwa</p>
+                                </div>
+                            </a>
+                            <a href="#" class="flex items-baseline gap-4 group">
+                                <span class="text-2xl md:text-3xl font-black text-white/5 group-hover:text-[#8a60c2] transition">03</span>
+                                <div>
+                                    <h4 class="font-bold uppercase tracking-widest text-xs md:text-sm text-gray-300 group-hover:text-white transition">Ruhlar olami</h4>
+                                    <p class="font-mono text-[10px] text-gray-500 mt-1">Manga</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="p-5 md:p-10 h-full lg:h-1/2 flex flex-col justify-center">
+                        <h2 class="text-sm md:text-lg font-black uppercase tracking-[0.1em] mb-6 text-gray-500">Formatlar</h2>
+                        
+                        <div class="flex flex-col font-bold uppercase tracking-[0.2em] text-[11px] md:text-xs">
+                            <a href="manga_catalog.html" class="group flex justify-between items-center text-gray-400 hover:text-white transition py-3 border-b grid-border hover:border-[#8a60c2]/50">
+                                Manga <i class="fas fa-arrow-right text-gray-600 group-hover:text-[#8a60c2] transition transform group-hover:translate-x-1"></i>
+                            </a>
+                            <a href="manhwa_catalog.html"group flex justify-between items-center text-gray-400 hover:text-white transition py-3 border-b grid-border hover:border-[#8a60c2]/50">
+                                Manhwa <i class="fas fa-arrow-right text-gray-600 group-hover:text-[#8a60c2] transition transform group-hover:translate-x-1"></i>
+                            </a>
+                            <a href="novel_catalog.html" class="group flex justify-between items-center text-gray-400 hover:text-white transition py-3 hover:border-[#8a60c2]/50">
+                                Renobe <i class="fas fa-arrow-right text-gray-600 group-hover:text-[#8a60c2] transition transform group-hover:translate-x-1"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="bg-[#121015] w-full pt-12 pb-24 md:pb-10 md:pt-20 border-t border-gray-800/50 mt-10 relative z-10">
+        <div class="max-w-7xl mx-auto px-5">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-10 md:mb-16 text-center md:text-left">
+                <div class="md:col-span-1">
+                    <div class="text-2xl font-black tracking-tight italic mb-4 md:mb-6">
+                        Kawaii<span class="text-[#8a60c2]">UZ</span>
+                    </div>
+                    <p class="text-gray-400 text-xs md:text-sm leading-relaxed">
+                        O'zbekistondagi eng sifatli va zamonaviy anime platformasi. Biz bilan sevimli animelaringizni o'zbek tilida, yuqori sifatda tomosha qiling.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-4 md:mb-6 text-white">Navigatsiya</h3>
+                    <ul class="space-y-3 md:space-y-4 text-xs md:text-sm text-gray-500 font-medium">
+                        <li><a href="#" class="hover:text-white transition">Asosiy</a></li>
+                        <li><a href="manga_catalog.html" class="hover:text-white transition">Katalog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-4 md:mb-6 text-white">Ma'lumot</h3>
+                    <ul class="space-y-3 md:space-y-4 text-xs md:text-sm text-gray-500 font-medium">
+                        <li><a href="#" class="hover:text-white transition">Savollar</a></li>
+                        <li><a href="#" class="hover:text-white transition">Aloqa</a></li>
+                        <li><a href="#" class="hover:text-white transition">Dasturchi</a></li>
+                    </ul>
+                </div>
+                <div class="flex flex-col items-center md:items-start">
+                    <h3 class="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-4 md:mb-6 text-white">Bizga qo'shiling</h3>
+                    <div class="flex gap-4 mb-4 md:mb-6">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#8a60c2] transition text-lg">
+                            <i class="fab fa-telegram-plane"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#8a60c2] transition text-lg">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                    <p class="text-[10px] md:text-[11px] text-gray-500 italic leading-relaxed">
+                        Hamjamiyatimizga qo'shiling va yangiliklardan birinchi bo'lib xabardor bo'ling.
+                    </p>
+                </div>
+            </div>
+            <div class="pt-6 md:pt-8 border-t border-gray-800/50 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-[10px] md:text-[11px] text-gray-600 font-medium uppercase tracking-wider text-center md:text-left">
+                    © 2026 Kawaii.uz — Barcha huquqlar himoyalangan.
+                </p>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="text-[10px] md:text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Bizdan uzoqlashmang</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <nav class="mobile-nav-fixed">
+        <a href="#" class="flex flex-col items-center gap-[2px] text-gray-500 hover:text-white transition group w-[15%]">
+            <i class="fas fa-bookmark text-[16px] group-hover:text-white transition"></i>
+            <span class="text-[8px] font-medium tracking-wide">Saqlanganlar</span>
+        </a>
+        
+        <a href="manga_catalog.html" class="flex flex-col items-center gap-[2px] text-gray-500 hover:text-white transition group w-[15%]">
+            <i class="fas fa-layer-group text-[16px] group-hover:text-white transition"></i>
+            <span class="text-[8px] font-medium tracking-wide">Katalog</span>
+        </a>
+        
+        <a href="#" class="flex flex-col items-center justify-center relative w-[20%] transform -translate-y-1">
+            <img src="static/logo.png" alt="Logo" class="w-10 h-10 object-contain drop-shadow-[0_0_10px_rgba(138,96,194,0.3)]" onerror="this.src='https://via.placeholder.com/36x36/1a191f/8a60c2?text=K'">
+        </a>
+        
+        <a href="#" class="flex flex-col items-center gap-[2px] text-gray-500 hover:text-white transition group w-[15%] relative">
+            <div class="relative">
+                <i class="fas fa-bell text-[16px] group-hover:text-white transition"></i>
+                <span class="absolute -top-1 -right-0.5 w-1.5 h-1.5 bg-red-500 rounded-full border border-[#16151a]"></span>
+            </div>
+            <span class="text-[8px] font-medium tracking-wide">Xabarlar</span>
+        </a>
+        
+        <button id="mobileBottomMenuBtn" onclick="document.getElementById('mobileMenu').classList.remove('translate-x-full')" class="flex flex-col items-center gap-[2px] text-gray-500 hover:text-white transition group w-[15%]">
+            <i class="fas fa-bars text-[16px] group-hover:text-white transition"></i>
+            <span class="text-[8px] font-medium tracking-wide">Menyu</span>
+        </button>
+    </nav>
+
+    <script>
+        document.getElementById('closeMobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.add('translate-x-full');
+        });
+    </script>
+    <script src="static/js/main.js"></script>
+</body>
+</html>
